@@ -1,95 +1,198 @@
-# Analisis Respon Campaign Pelanggan Supermarket
-[![Open in Tableau](https://img.shields.io/badge/Tableau-Dashboard-blue)](https://public.tableau.com/app/profile/muhammad.jundullah/viz/Book1_17512056895580/Dashboard1?publish=yes)
+# Supermarket Customer Analysis
 
+## Project Overview
 
-Notebook ini menganalisis perilaku respons pelanggan supermarket berdasarkan berbagai atribut, seperti pendapatan, kunjungan web, status perkawinan, pendidikan, dan lainnya. Tujuan dari analisis ini adalah untuk mengidentifikasi pola perilaku pelanggan dan memberikan rekomendasi yang dapat diterapkan untuk meningkatkan efektivitas kampanye pemasaran di masa depan.
+This project analyzes supermarket customer data to identify characteristics that predict campaign response. The analysis uses various data science techniques including data cleaning, feature engineering, exploratory data analysis (EDA), and inferential statistics to provide actionable business insights for improving marketing campaign effectiveness.
 
-## Daftar Isi
+**Problem Statement:** Identify customer characteristics that are most likely to respond to promotional campaigns in the future.
 
-1. [Tujuan](#tujuan)
-2. [Overview Data](#overview-data)
-3. [Pembersihan Data](#pembersihan-data)
-4. [Statistik Deskriptif](#statistik-deskriptif)
-5. [Statistik Inferensial](#statistik-inferensial)
-   - 5.1 [Pendapatan vs Respons](#pendapatan-vs-respons)
-   - 5.2 [Pengeluaran Wine vs Respons](#pengeluaran-wine-vs-respons)
-   - 5.3 [Pendidikan vs Respons](#pendidikan-vs-respons)
-   - 5.4 [Status Pernikahan vs Respons](#status-pernikahan-vs-respons)
-6. [Insight dan Rekomendasi](#insight-dan-rekomendasi)
+## Objectives
 
----
+1. Describe customer characteristics based on campaign response
+2. Identify features that are most correlated with campaign success
+3. Provide actionable recommendations for the supermarket to improve campaign effectiveness
 
-## Tujuan
+## Dataset
 
-Tujuan dari analisis ini adalah untuk:
-- Menyelidiki faktor-faktor yang mempengaruhi respons pelanggan terhadap kampanye.
-- Melakukan uji statistik untuk mengidentifikasi perbedaan signifikan antar kelompok (responden dan non-responden).
-- Memberikan wawasan dan rekomendasi berdasarkan temuan data untuk mengoptimalkan strategi pemasaran.
+- **Source:** Supermarket Customers Dataset
+- **Size:** 2,240 rows × 29 columns (after cleaning: 2,216 rows)
+- **Features:** 
+  - Demographics: Year_Birth, Education, Marital_Status, Income
+  - Purchase Behavior: MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds
+  - Channel Usage: NumWebPurchases, NumCatalogPurchases, NumStorePurchases, NumDealsPurchases
+  - Campaign Response: Response (target variable)
+  - Other: Recency, NumWebVisitsMonth, AcceptedCmp1-5, etc.
 
----
+## Tools & Technologies
 
-## Overview Data
+- **Python 3.x**
+- **Libraries:**
+  - `pandas` - Data manipulation and analysis
+  - `numpy` - Numerical computing
+  - `matplotlib` - Data visualization
+  - `seaborn` - Statistical data visualization
+  - `scipy.stats` - Statistical tests (t-test, chi-square)
 
-Dataset ini berisi informasi pelanggan dan respons mereka terhadap kampanye pemasaran. Beberapa fitur yang ada dalam dataset ini antara lain:
-- **Demografi Pelanggan**: Pendapatan, Pendidikan, Status Pernikahan, dll.
-- **Respons Kampanye**: Apakah pelanggan merespons kampanye.
-- **Interaksi Web**: Jumlah kunjungan ke website per bulan.
+## Project Structure
 
-Dataset telah dibersihkan dan diproses untuk memastikan akurasi analisis.
+```
+Capstone2/
+│
+├── SupermarketCustomer.ipynb          # Main analysis notebook
+├── SupermarketCustomers.csv          # Raw dataset
+├── cleaned_supermarket_data.csv      # Cleaned dataset (output)
+├── README.md                          # This file
+└── Supermarket Customers Data Dictionary.pdf  # Data dictionary
+```
 
----
+## Analysis Workflow
 
-## Pembersihan Data
+1. **Data Overview**
+   - Initial data exploration
+   - Data type checking
+   - Missing value identification
 
-Pada bagian ini, data dibersihkan dengan menangani nilai yang hilang, memperbaiki tipe data, dan menangani outlier. Beberapa langkah yang diambil adalah:
-- Nilai yang hilang ditangani dengan cara menghapus atau mengimputasi data yang hilang.
-- Kolom `Response` diubah menjadi tipe data boolean (True/False).
-- Outlier pada kolom numerik seperti `Income` dan `MntWines` diatasi.
+2. **Data Cleaning & Preparation**
+   - Missing value handling (24 missing values in Income column)
+   - Outlier detection and handling (winsorization for Income)
+   - Feature engineering (9 new features created):
+     - TotalSpending
+     - TotalPurchases
+     - AvgTransactionValue
+     - Customer Tenure (Days/Months/Years)
+     - Customer Lifetime Value (CLV)
+     - DominantChannel
+     - FavoriteCategory
+     - RFM Segments
+     - Campaign Engagement
 
----
+3. **Exploratory Data Analysis (EDA)**
+   - Univariate analysis (Income, MntWines, Recency, etc.)
+   - Categorical variable analysis (Education, Marital_Status)
+   - Response rate overview (15.03%)
 
-## Statistik Deskriptif
+4. **Inferential Analysis**
+   - Independent t-tests for numeric variables (Income, MntWines)
+   - Chi-square tests for categorical variables (Education, Marital_Status)
+   - Effect size calculations (Cohen's d, Cramer's V)
+   - Additional variable analysis
 
-Statistik deskriptif memberikan gambaran umum tentang data, meliputi:
-- **Pendapatan**: Rata-rata dan distribusi pendapatan pelanggan.
-- **Pengeluaran Wine**: Pengeluaran rata-rata untuk wine.
-- **Recency**: Waktu sejak pembelian terakhir.
-- **NumWebVisitsMonth**: Jumlah kunjungan web per bulan.
+5. **Business Insights & Recommendations**
+   - Key findings summary
+   - Actionable recommendations for campaign targeting
 
----
+## Key Findings
 
-## Statistik Inferensial
+### Response Rate
+- **15.03%** of customers (333 out of 2,216) responded to the campaign
 
-Bagian ini berisi uji statistik untuk menentukan apakah ada perbedaan signifikan antar kelompok. Uji yang dilakukan adalah:
-- **Pendapatan vs Respons**: Uji t independen untuk membandingkan rata-rata pendapatan antara pelanggan yang merespons kampanye dan yang tidak.
-- **Pengeluaran Wine vs Respons**: Uji t independen untuk membandingkan rata-rata pengeluaran wine antara responden dan non-responden.
-- **Pendidikan vs Respons**: Uji Chi-Square untuk menentukan apakah ada asosiasi antara tingkat pendidikan dan respons terhadap kampanye.
-- **Status Pernikahan vs Respons**: Uji Chi-Square untuk menganalisis hubungan antara status pernikahan dan respons.
+### Significant Predictors
 
----
+1. **Income**
+   - Responders have significantly higher income (USD 60,209 vs USD 50,839)
+   - t-statistic = 6.70, p-value < 0.001
+   - Effect size: Small-Medium (Cohen's d)
 
-## Insight dan Rekomendasi
+2. **Wine Spending (MntWines)**
+   - Responders spend significantly more on wine (USD 502.62 vs USD 270.16)
+   - t-statistic = 9.50, p-value < 0.001
+   - Strong predictor of campaign response
 
-**Insight Utama**:
-1. **Pendapatan dan Respons**: Pelanggan dengan pendapatan lebih tinggi cenderung lebih sering merespons kampanye, yang menunjukkan bahwa **pendapatan berperan penting** dalam respons terhadap promosi.
-2. **Pengeluaran Wine**: Pelanggan dengan pengeluaran lebih tinggi untuk wine lebih cenderung merespons kampanye, menunjukkan bahwa **loyalitas produk** dapat mempengaruhi respons.
-3. **Pendidikan dan Respons**: Ada asosiasi signifikan antara tingkat pendidikan dan respons, yang menunjukkan bahwa **pendidikan mempengaruhi tingkat keterlibatan pelanggan**.
-4. **Status Pernikahan dan Respons**: Status pernikahan berhubungan dengan respons, dengan pelanggan yang sudah menikah lebih cenderung merespons kampanye.
+3. **Education Level**
+   - Significant association with campaign response (χ² = 23.15, p-value = 0.0001)
+   - Higher education (Graduate, PhD) shows higher response rates
 
-**Rekomendasi**:
-1. **Targetkan Pelanggan dengan Pendapatan Lebih Tinggi**: Fokuskan kampanye pemasaran pada pelanggan dengan pendapatan lebih tinggi karena mereka lebih cenderung merespons.
-2. **Segmentasi Berdasarkan Tingkat Pendidikan**: Sesuaikan kampanye dengan tingkat pendidikan pelanggan untuk meningkatkan tingkat respons.
-3. **Fokus pada Pelanggan dengan Pengeluaran Lebih Tinggi untuk Wine**: Pelanggan yang memiliki pengeluaran lebih tinggi untuk wine lebih mungkin merespons, sehingga memberikan **penawaran yang lebih relevan** dapat meningkatkan konversi.
+4. **Marital Status**
+   - Significant association with campaign response
+   - Single, Divorced, and Widow have higher response rates (≥ 20%)
+   - Married and Together tend to have lower response rates
 
+### Customer Profile Most Likely to Respond
+- Income > USD 60,000
+- High wine spending
+- Higher education background (Graduate, PhD)
+- Non-traditional marital status (Single, Divorced, YOLO, Alone)
 
----
+## Recommendations
 
-## Kebutuhan Sistem
+1. **Target campaigns to high-income customers**
+   - Focus on customers with income > USD 60,000
+   - Optimize income-based segmentation to increase conversion
 
-- Python 3.x
-- Libraries: pandas, numpy, scipy, matplotlib, seaborn, tableau
+2. **Focus promotions on high wine spenders**
+   - Target customers with high MntWines values
+   - Suitable for upselling campaigns and loyalty programs
 
-Pastikan untuk menginstal package yang dibutuhkan dengan:
+3. **Use combined behavioral and demographic segmentation**
+   - Combine Income, MntWines, Education, and Marital_Status
+   - Build classification models for improved targeting accuracy
+
+**Expected Impact:** With proper segmentation, response rate can potentially increase from 15% to 22-25% for high-priority segments while reducing ineffective promotional costs.
+
+## How to Run
+
+### Prerequisites
+
 ```bash
-pip install pandas numpy scipy matplotlib seaborn
+pip install pandas numpy matplotlib seaborn scipy jupyter
+```
+
+### Running the Analysis
+
+1. Clone or download this repository
+2. Ensure `SupermarketCustomers.csv` is in the same directory
+3. Open `SupermarketCustomer.ipynb` in Jupyter Notebook
+4. Run all cells sequentially
+
+```bash
+jupyter notebook SupermarketCustomer.ipynb
+```
+
+### Output Files
+
+- `cleaned_supermarket_data.csv` - Cleaned dataset with engineered features
+
+## Statistical Methods Used
+
+- **Descriptive Statistics:** Mean, median, quartiles, skewness
+- **Inferential Statistics:**
+  - Independent t-test (for numeric variables)
+  - Chi-square test (for categorical variables)
+  - Effect size calculations (Cohen's d, Cramer's V)
+- **Data Visualization:** Box plots, histograms, bar charts, heatmaps
+
+## Project Status
+
+✅ **Completed**
+- Data cleaning and preparation
+- Feature engineering
+- Exploratory data analysis
+- Inferential statistical analysis
+- Business insights and recommendations
+
+## Future Work
+
+1. Implement segmentation based on recommendations
+2. A/B testing for campaign message and timing optimization
+3. Continuous monitoring and evaluation for improvement
+4. Build predictive models (classification) for campaign response
+5. Develop automated segmentation pipeline
+
+## Author
+
+Capstone Project Module 2 - Data Analyst Bootcamp
+
+## License
+
+This project is for educational purposes.
+
+## References
+
+- Dataset: Supermarket Customers Dataset
+- Statistical methods: Independent t-test, Chi-square test, Effect size measures
+- Tools: Python, Jupyter Notebook, pandas, scipy
+
+---
+
+**Note:** This analysis provides actionable insights for improving marketing campaign effectiveness through data-driven customer segmentation.
 
